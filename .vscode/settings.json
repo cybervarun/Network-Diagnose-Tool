@@ -1,0 +1,11 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd /d \"d:\\\\Apps\\\\Network diagnosis tool\" ; python -m pytest -q$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "py": true,
+        "where.exe": true
+    },
+    "terminal.integrated.shellIntegration.environmentReporting": true
+}

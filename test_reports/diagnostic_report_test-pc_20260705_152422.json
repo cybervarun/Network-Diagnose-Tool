@@ -1,0 +1,66 @@
+{
+  "metadata": {
+    "hostname": "test-pc",
+    "generated": "2026-07-05T15:24:22.801838",
+    "total_findings": 2,
+    "findings_by_severity": {
+      "low": 1,
+      "info": 1
+    }
+  },
+  "findings": [
+    {
+      "title": "IPv6 Not Configured",
+      "severity": "low",
+      "explanation": "Only IPv4 is configured. While IPv4-only is supported, modern enterprise networks typically support both IPv4 and IPv6.",
+      "root_cause": "IPv6 may be disabled or not properly configured on the adapter.",
+      "evidence": [
+        "IP addresses: ['192.168.1.100']",
+        "No IPv6 addresses found"
+      ],
+      "recommended_actions": [
+        "Check IPv6 status: netsh int ipv6 show interface",
+        "Enable IPv6 if disabled: netsh int ipv6 set state enabled",
+        "Restart adapter after enabling IPv6",
+        "Verify DHCPv6 is available on network"
+      ],
+      "learning_articles": [
+        "IPv6 in Enterprise Networks",
+        "Dual-stack Configuration"
+      ],
+      "dependencies": [
+        "IPv6 infrastructure available"
+      ],
+      "escalation_criteria": [
+        "IPv6-only services are required"
+      ]
+    },
+    {
+      "title": "Windows Firewall Active",
+      "severity": "info",
+      "explanation": "Windows Defender Firewall is enabled. Verify it is not blocking required applications or services.",
+      "root_cause": "Firewall rules may need to be configured for applications.",
+      "evidence": [
+        "Firewall status: Active"
+      ],
+      "recommended_actions": [
+        "Review firewall profiles: netsh advfirewall show allprofiles",
+        "Check for blocked applications: Windows Defender Firewall > Allow app through firewall",
+        "Create firewall rules for required services as needed",
+        "If testing connectivity, temporarily add rule to allow ping: netsh advfirewall firewall add rule name='Allow ICMP' protocol=icmpv4 dir=in action=allow",
+        "Do not disable firewall; configure rules instead"
+      ],
+      "learning_articles": [
+        "Windows Firewall Rule Management",
+        "Firewall and Network Diagnostics"
+      ],
+      "dependencies": [
+        "Firewall accessible for configuration"
+      ],
+      "escalation_criteria": [
+        "Cannot create firewall rules",
+        "Firewall rules not applying as expected"
+      ]
+    }
+  ]
+}

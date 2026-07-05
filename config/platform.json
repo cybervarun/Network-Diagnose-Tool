@@ -1,0 +1,76 @@
+{
+  "platform_name": "Enterprise Endpoint Diagnostic Platform",
+  "version": "0.1.0",
+  "offline_mode": true,
+  "output_dir": "./reports",
+  "log_level": "INFO",
+  "rules": {
+    "dns_resolution_failure": {
+      "name": "DNS Resolution Failure",
+      "enabled": true,
+      "description": "Detects when DNS resolution is failing",
+      "priority": 100,
+      "dependencies": [
+        "network_adapter"
+      ],
+      "parameters": {}
+    },
+    "missing_gateway": {
+      "name": "Missing Default Gateway",
+      "enabled": true,
+      "description": "Detects missing default gateway configuration",
+      "priority": 95,
+      "dependencies": [
+        "network_adapter"
+      ],
+      "parameters": {}
+    },
+    "no_internet": {
+      "name": "No Internet Connectivity",
+      "enabled": true,
+      "description": "Detects when internet connectivity is unavailable",
+      "priority": 90,
+      "dependencies": [
+        "gateway_reachability"
+      ],
+      "parameters": {}
+    },
+    "gateway_unreachable": {
+      "name": "Gateway Unreachable",
+      "enabled": true,
+      "description": "Detects when configured gateway is not reachable",
+      "priority": 85,
+      "dependencies": [
+        "network_adapter"
+      ],
+      "parameters": {}
+    },
+    "no_ip_address": {
+      "name": "No IP Address",
+      "enabled": true,
+      "description": "Detects when no IP address is assigned",
+      "priority": 80,
+      "dependencies": [
+        "network_adapter"
+      ],
+      "parameters": {}
+    },
+    "firewall_active": {
+      "name": "Firewall Active",
+      "enabled": true,
+      "description": "Informational: Windows Firewall is active",
+      "priority": 10,
+      "dependencies": [
+        "system_info"
+      ],
+      "parameters": {}
+    }
+  },
+  "enabled_report_formats": [
+    "text",
+    "html",
+    "json"
+  ],
+  "collect_full_diagnostics": true,
+  "timeout_seconds": 30
+}

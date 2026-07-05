@@ -1,6 +1,13 @@
-<<<<<<< HEAD
-# Network-Diagnose-Tool
-=======
+Metadata-Version: 2.4
+Name: network-diagnostic-platform
+Version: 0.1.0
+Summary: Offline enterprise Windows endpoint diagnostic platform
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0; extra == "dev"
+
 # Enterprise Windows Endpoint Diagnostic Platform
 
 A production-ready, offline-first diagnostic platform for enterprise Windows endpoint troubleshooting. Diagnoses network issues, explains root causes, provides evidence-based recommendations, and generates professional reports.
@@ -39,7 +46,7 @@ This platform automates the diagnosis of enterprise Windows endpoint networking 
 ✅ **Configuration Management**
 - Enable/disable rules dynamically
 - Set rule priorities
-- Plugin-ready architecture with real module discovery
+- Plugin-ready architecture
 - JSON-based persistence
 
 ✅ **Production-Grade Code**
@@ -120,9 +127,6 @@ python -m NetworkDiagnosticPlatform.cli --rule-details dns
 
 # Show details for gateway rules
 python -m NetworkDiagnosticPlatform.cli --rule-details gateway
-
-# Load custom plugin rules from a directory
-python -m NetworkDiagnosticPlatform.cli --offline --plugin-path ./plugins
 ```
 
 ### Help
@@ -552,4 +556,3 @@ This diagnostic platform was developed as an enterprise solution for standardizi
 **Version:** 0.1.0  
 **Status:** Production Ready ✅
 
->>>>>>> 4951906 (Initial commit)

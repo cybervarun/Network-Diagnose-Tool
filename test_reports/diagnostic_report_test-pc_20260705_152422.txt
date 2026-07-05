@@ -1,0 +1,69 @@
+╔════════════════════════════════════════════════════════════════╗
+║        ENTERPRISE ENDPOINT DIAGNOSTIC REPORT                    ║
+╚════════════════════════════════════════════════════════════════╝
+
+Hostname: test-pc
+Generated: 2026-07-05 15:24:22
+Total Findings: 2
+
+
+─── LOW SEVERITY ───
+
+▶ IPv6 Not Configured
+  Severity: [LOW]
+
+  Explanation:
+  Only IPv4 is configured. While IPv4-only is supported, modern enterprise networks typically support both IPv4 and IPv6.
+
+  Root Cause:
+  IPv6 may be disabled or not properly configured on the adapter.
+
+  Supporting Evidence:
+  • IP addresses: ['192.168.1.100']
+  • No IPv6 addresses found
+
+  Recommended Actions:
+  1. Check IPv6 status: netsh int ipv6 show interface
+  2. Enable IPv6 if disabled: netsh int ipv6 set state enabled
+  3. Restart adapter after enabling IPv6
+  4. Verify DHCPv6 is available on network
+
+  💡 Learning Articles:
+  • IPv6 in Enterprise Networks
+  • Dual-stack Configuration
+
+  ⚠️ Escalation Criteria:
+  • IPv6-only services are required
+
+
+─── INFO SEVERITY ───
+
+▶ Windows Firewall Active
+  Severity: [INFO]
+
+  Explanation:
+  Windows Defender Firewall is enabled. Verify it is not blocking required applications or services.
+
+  Root Cause:
+  Firewall rules may need to be configured for applications.
+
+  Supporting Evidence:
+  • Firewall status: Active
+
+  Recommended Actions:
+  1. Review firewall profiles: netsh advfirewall show allprofiles
+  2. Check for blocked applications: Windows Defender Firewall > Allow app through firewall
+  3. Create firewall rules for required services as needed
+  4. If testing connectivity, temporarily add rule to allow ping: netsh advfirewall firewall add rule name='Allow ICMP' protocol=icmpv4 dir=in action=allow
+  5. Do not disable firewall; configure rules instead
+
+  💡 Learning Articles:
+  • Windows Firewall Rule Management
+  • Firewall and Network Diagnostics
+
+  ⚠️ Escalation Criteria:
+  • Cannot create firewall rules
+  • Firewall rules not applying as expected
+
+──────────────────────────────────────────────────────────────────
+End of Report

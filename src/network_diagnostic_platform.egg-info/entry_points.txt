@@ -1,0 +1,2 @@
+[console_scripts]
+network-diagnostic = NetworkDiagnosticPlatform.cli:main
