@@ -1,7 +1,15 @@
-<<<<<<< HEAD
-# Network-Diagnose-Tool
-=======
 # Enterprise Windows Endpoint Diagnostic Platform
+
+**Current Status:** Phase 3 Improvements Complete | Production Ready Core | 57 Tests Passing
+
+## Phase 3 Additions
+
+- Searchable offline troubleshooting knowledge base for DNS, gateway, DHCP/APIPA, firewall, proxy/VPN, and adapter issues
+- Article detail views with symptoms, checks, fixes, escalation criteria, and related diagnostic rules
+- Release-readiness CLI summary for Windows packaging validation
+- Build script checks for package metadata and distributable artifacts
+- Generated Windows install bundle with PowerShell install and uninstall helpers
+- Full handbook: [docs/Toolkit Handbook.md](docs/Toolkit%20Handbook.md)
 
 A production-ready, offline-first diagnostic platform for enterprise Windows endpoint troubleshooting. Diagnoses network issues, explains root causes, provides evidence-based recommendations, and generates professional reports.
 
@@ -123,6 +131,28 @@ python -m NetworkDiagnosticPlatform.cli --rule-details gateway
 
 # Load custom plugin rules from a directory
 python -m NetworkDiagnosticPlatform.cli --offline --plugin-path ./plugins
+```
+
+### Knowledge Base and Release Workflow
+
+```bash
+# List all bundled troubleshooting articles
+python -m NetworkDiagnosticPlatform.cli --knowledge-list
+
+# Search offline guidance
+python -m NetworkDiagnosticPlatform.cli --knowledge-search dns
+
+# Show article details
+python -m NetworkDiagnosticPlatform.cli --knowledge-detail dhcp_apipa
+
+# Check release readiness from the CLI
+python -m NetworkDiagnosticPlatform.cli --release-check
+
+# Build and validate distributable artifacts
+python scripts/build_package.py --check --windows-bundle
+
+# Install from the generated Windows bundle
+powershell -ExecutionPolicy Bypass -File .\dist\windows\install.ps1 -OfflineSmokeTest
 ```
 
 ### Help
@@ -551,5 +581,3 @@ This diagnostic platform was developed as an enterprise solution for standardizi
 **Last Updated:** 2026-07-05  
 **Version:** 0.1.0  
 **Status:** Production Ready ✅
-
->>>>>>> 4951906 (Initial commit)

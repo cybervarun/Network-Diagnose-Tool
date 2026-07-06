@@ -9,12 +9,23 @@ description = "Offline enterprise Windows endpoint diagnostic platform"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = []
+keywords = ["windows", "network", "diagnostics", "troubleshooting", "offline"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Information Technology",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: System :: Networking",
+    "Topic :: System :: Systems Administration",
+]
 
 [project.scripts]
 network-diagnostic = "NetworkDiagnosticPlatform.cli:main"
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "pytest-cov>=4.0"]
+dev = ["pytest>=8.0", "pytest-cov>=4.0", "build>=1.2.0", "tomli>=2.0; python_version < '3.11'"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

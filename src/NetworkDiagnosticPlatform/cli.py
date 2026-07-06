@@ -12,6 +12,10 @@ from .evidence_collector import WindowsEvidenceCollector
 from .rule_engine import RuleEngine
 from .reporting import ReportGenerator
 from .configuration import ConfigurationManager
+from .knowledge import KnowledgeBase
+
+
+PACKAGE_VERSION = "0.1.0"
 
 
 def setup_logging(log_level: str = "INFO") -> logging.Logger:
@@ -147,7 +151,7 @@ class DiagnosticCLI:
         print()
         
         for name, rule in sorted(rules.items(), key=lambda x: -x[1].priority):
-            status = "✓ ENABLED " if rule.enabled else "✗ DISABLED"
+            status = "[x] ENABLED " if rule.enabled else "[ ] DISABLED"
             print(f"{status} | Priority: {rule.priority:3} | {name}")
             if rule.description:
                 print(f"         {rule.description}")
@@ -179,6 +183,89 @@ class DiagnosticCLI:
             if rule.parameters:
                 print(f"Parameters  : {rule.parameters}")
 
+    def show_release_readiness(self) -> None:
+        """Print a lightweight release-readiness summary."""
+        kb = KnowledgeBase()
+        project_root = Path(__file__).resolve().parents[2]
+        pyproject = project_root / "pyproject.toml"
+        build_script = project_root / "scripts" / "build_package.py"
+        dist_dir = project_root / "dist"
+        windows_bundle_dir = dist_dir / "windows"
+        wheel_count = len(list(dist_dir.glob("*.whl"))) if dist_dir.exists() else 0
+        sdist_count = len(list(dist_dir.glob("*.tar.gz"))) if dist_dir.exists() else 0
+        has_windows_bundle = windows_bundle_dir.exists()
+
+        print("\nRelease Readiness Summary")
+        print("=" * 70)
+        print(f"- Version: {PACKAGE_VERSION}")
+        print("- Console entry point: network-diagnostic")
+        print(f"- Packaging metadata: {'present' if pyproject.exists() else 'missing'}")
+        print(f"- Build script: {'present' if build_script.exists() else 'missing'}")
+        print(f"- Current wheel artifacts: {wheel_count}")
+        print(f"- Current source distributions: {sdist_count}")
+        print(f"- Windows install bundle: {'present' if has_windows_bundle else 'missing'}")
+        print("- Windows console output: ASCII-safe")
+        print("- Core diagnostics, reporting, and plugin rule loading: implemented")
+        print(f"- Knowledge articles available: {len(kb.articles)}")
+        print("- Recommended release command: python scripts/build_package.py --check --windows-bundle")
+        print("- Final validation: run dist\\windows\\install.ps1 -OfflineSmokeTest on a clean Windows endpoint")
+
+    def list_knowledge(self) -> list[dict[str, object]]:
+        """List bundled troubleshooting knowledge articles."""
+        kb = KnowledgeBase()
+        articles = kb.list_articles()
+        print("\nBundled Troubleshooting Articles")
+        print("=" * 70)
+        for article in articles:
+            print(f"- {article['id']}: {article['title']} ({article['category']})")
+            print(f"  {article['summary']}")
+        return articles
+
+    def search_knowledge(self, query: str) -> list[dict[str, object]]:
+        """Search the bundled troubleshooting knowledge base."""
+        kb = KnowledgeBase()
+        results = kb.search(query)
+        if not results:
+            print(f"No knowledge articles found for '{query}'")
+            return []
+
+        print(f"\nKnowledge base matches for '{query}':")
+        print("=" * 70)
+        for result in results:
+            print(f"- {result['id']}: {result['title']}")
+            print(f"  {result['summary']}")
+            print(f"  Category: {result['category']} | Severity: {result['severity']}")
+        return results
+
+    def show_knowledge_article(self, article_id: str) -> dict[str, object] | None:
+        """Print one bundled troubleshooting article."""
+        kb = KnowledgeBase()
+        article = kb.get(article_id)
+        if article is None:
+            print(f"No knowledge article found with id '{article_id}'")
+            return None
+
+        print(f"\n{article['title']}")
+        print("=" * 70)
+        print(f"ID      : {article['id']}")
+        print(f"Category: {article['category']}")
+        print(f"Severity: {article['severity']}")
+        print(f"Summary : {article['summary']}")
+
+        for heading, key in [
+            ("Symptoms", "symptoms"),
+            ("Checks", "checks"),
+            ("Fixes", "fixes"),
+            ("Escalation", "escalation"),
+            ("Related Rules", "related_rules"),
+        ]:
+            values = article.get(key, [])
+            if values:
+                print(f"\n{heading}:")
+                for value in values:
+                    print(f"- {value}")
+        return article
+
 
 def main() -> int:
     """Main CLI entry point.
@@ -197,6 +284,9 @@ Examples:
   %(prog)s --format html,json       Generate HTML and JSON reports only
   %(prog)s --list-rules             Show all available diagnostic rules
   %(prog)s --rule-details dns       Show details for DNS-related rules
+  %(prog)s --knowledge-list         Show bundled troubleshooting articles
+  %(prog)s --knowledge-search dns   Search offline troubleshooting guidance
+  %(prog)s --release-check          Show packaging and release readiness
         """
     )
     
@@ -246,6 +336,30 @@ Examples:
     )
     
     parser.add_argument(
+        "--release-check",
+        action="store_true",
+        help="Show a lightweight release-readiness summary"
+    )
+
+    parser.add_argument(
+        "--knowledge-search",
+        metavar="QUERY",
+        help="Search the bundled troubleshooting knowledge base"
+    )
+
+    parser.add_argument(
+        "--knowledge-list",
+        action="store_true",
+        help="List bundled troubleshooting knowledge articles"
+    )
+
+    parser.add_argument(
+        "--knowledge-detail",
+        metavar="ARTICLE_ID",
+        help="Show detailed guidance for a bundled troubleshooting article"
+    )
+    
+    parser.add_argument(
         "-v", "--verbose",
         action="store_true",
         help="Enable verbose output"
@@ -270,6 +384,22 @@ Examples:
         
         if args.rule_details:
             cli.show_rule_details(args.rule_details)
+            return 0
+
+        if args.release_check:
+            cli.show_release_readiness()
+            return 0
+
+        if args.knowledge_list:
+            cli.list_knowledge()
+            return 0
+
+        if args.knowledge_detail:
+            article = cli.show_knowledge_article(args.knowledge_detail)
+            return 0 if article is not None else 2
+
+        if args.knowledge_search:
+            cli.search_knowledge(args.knowledge_search)
             return 0
         
         # Run diagnostic

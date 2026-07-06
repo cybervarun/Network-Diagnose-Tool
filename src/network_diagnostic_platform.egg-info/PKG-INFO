@@ -2,13 +2,32 @@ Metadata-Version: 2.4
 Name: network-diagnostic-platform
 Version: 0.1.0
 Summary: Offline enterprise Windows endpoint diagnostic platform
+Keywords: windows,network,diagnostics,troubleshooting,offline
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Information Technology
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Topic :: System :: Networking
+Classifier: Topic :: System :: Systems Administration
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 Provides-Extra: dev
 Requires-Dist: pytest>=8.0; extra == "dev"
 Requires-Dist: pytest-cov>=4.0; extra == "dev"
+Requires-Dist: build>=1.2.0; extra == "dev"
+Requires-Dist: tomli>=2.0; python_version < "3.11" and extra == "dev"
 
 # Enterprise Windows Endpoint Diagnostic Platform
+
+## Phase 3 Additions
+
+- Searchable offline troubleshooting knowledge base for DNS, gateway, DHCP/APIPA, firewall, proxy/VPN, and adapter issues
+- Article detail views with symptoms, checks, fixes, escalation criteria, and related diagnostic rules
+- Release-readiness CLI summary for Windows packaging validation
+- Build script checks for package metadata and distributable artifacts
+- Generated Windows install bundle with PowerShell install and uninstall helpers
 
 A production-ready, offline-first diagnostic platform for enterprise Windows endpoint troubleshooting. Diagnoses network issues, explains root causes, provides evidence-based recommendations, and generates professional reports.
 
@@ -46,7 +65,7 @@ This platform automates the diagnosis of enterprise Windows endpoint networking 
 ✅ **Configuration Management**
 - Enable/disable rules dynamically
 - Set rule priorities
-- Plugin-ready architecture
+- Plugin-ready architecture with real module discovery
 - JSON-based persistence
 
 ✅ **Production-Grade Code**
@@ -127,6 +146,31 @@ python -m NetworkDiagnosticPlatform.cli --rule-details dns
 
 # Show details for gateway rules
 python -m NetworkDiagnosticPlatform.cli --rule-details gateway
+
+# Load custom plugin rules from a directory
+python -m NetworkDiagnosticPlatform.cli --offline --plugin-path ./plugins
+```
+
+### Knowledge Base and Release Workflow
+
+```bash
+# List all bundled troubleshooting articles
+python -m NetworkDiagnosticPlatform.cli --knowledge-list
+
+# Search offline guidance
+python -m NetworkDiagnosticPlatform.cli --knowledge-search dns
+
+# Show article details
+python -m NetworkDiagnosticPlatform.cli --knowledge-detail dhcp_apipa
+
+# Check release readiness from the CLI
+python -m NetworkDiagnosticPlatform.cli --release-check
+
+# Build and validate distributable artifacts
+python scripts/build_package.py --check --windows-bundle
+
+# Install from the generated Windows bundle
+powershell -ExecutionPolicy Bypass -File .\dist\windows\install.ps1 -OfflineSmokeTest
 ```
 
 ### Help
@@ -555,4 +599,3 @@ This diagnostic platform was developed as an enterprise solution for standardizi
 **Last Updated:** 2026-07-05  
 **Version:** 0.1.0  
 **Status:** Production Ready ✅
-

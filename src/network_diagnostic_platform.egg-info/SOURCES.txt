@@ -6,6 +6,7 @@ src/NetworkDiagnosticPlatform/configuration.py
 src/NetworkDiagnosticPlatform/evidence_collector.py
 src/NetworkDiagnosticPlatform/reporting.py
 src/NetworkDiagnosticPlatform/rule_engine.py
+src/NetworkDiagnosticPlatform/knowledge/__init__.py
 src/network_diagnostic_platform.egg-info/PKG-INFO
 src/network_diagnostic_platform.egg-info/SOURCES.txt
 src/network_diagnostic_platform.egg-info/dependency_links.txt
