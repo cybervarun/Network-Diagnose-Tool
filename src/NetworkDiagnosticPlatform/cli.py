@@ -13,6 +13,7 @@ from .rule_engine import RuleEngine
 from .reporting import ReportGenerator
 from .configuration import ConfigurationManager
 from .knowledge import KnowledgeBase
+from .portable import resolve_config_dir, resolve_output_dir
 
 
 PACKAGE_VERSION = "0.1.0"
@@ -40,7 +41,7 @@ class DiagnosticCLI:
     def __init__(self) -> None:
         """Initialize CLI."""
         self.logger = logging.getLogger(__name__)
-        self.config_manager = ConfigurationManager()
+        self.config_manager = ConfigurationManager(config_dir=resolve_config_dir(None))
     
     def run_full_diagnostic(self, output_dir: str = "./reports",
                            hostname: Optional[str] = None,
@@ -82,8 +83,9 @@ class DiagnosticCLI:
             self.logger.info(f"Analysis complete: {len(findings)} findings")
             
             # Step 3: Generate reports
+            resolved_output_dir = resolve_output_dir(output_dir)
             self.logger.info("Generating reports...")
-            report_generator = ReportGenerator(output_dir=output_dir)
+            report_generator = ReportGenerator(output_dir=str(resolved_output_dir))
             report_paths = []
             
             for fmt in formats:
@@ -293,7 +295,7 @@ Examples:
     parser.add_argument(
         "-o", "--output",
         dest="output_dir",
-        default="./reports",
+        default=None,
         help="Output directory for reports (default: ./reports)"
     )
     
